@@ -1,0 +1,84 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+body {
+    background-color: rgb(108, 108, 214);
+}
+
+.left {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30vh;
+    padding: 50px;
+    border-radius: 20px;
+    border: 2px solid gray;
+    background-color: peachpuff;
+}
+
+
+.lists {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: scroll;
+}
+
+.lists::-webkit-scrollbar{
+    display: none;
+}
+
+button {
+    border-radius: 5px;
+    padding: 6px;
+    background-color: green;
+    color: white;
+}
+
+.right {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30vh;
+    padding: 50px;
+    border-radius: 20px;
+    border: 2px solid gray;
+    background-color: teal;
+}
+
+.list{
+    font-size: 30px;
+}
+
+.right>.heading>.s1 {
+    font-size: 60px;
+}
+
+.checked {
+    text-decoration: line-through;
+    color: red;
+
+}
+
+.right>.heading>span {
+    font-size: 30px;
+    margin-top: 0;
+}
+
+.techs {
+    font-size: 20px;
+    background-color: black;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+}
+form>input{
+    font-size: 20px;
+}

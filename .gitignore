@@ -1,0 +1,3 @@
+# hide env and node modules
+.env
+node_modules
