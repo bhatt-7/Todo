@@ -1,19 +1,39 @@
 document.addEventListener('DOMContentLoaded', refreshWindow);
+console.log("hello everyone");
 
+// Inside your refreshWindow function
 async function refreshWindow() {
     try {
-        const response = await fetch('http://localhost:3000/api/todos');
+        const response = await fetch('http://localhost:3000/api/todos', {
+            method: 'GET',
+            credentials: 'include',  // Include cookies in the request
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
         if (!response.ok) {
             throw new Error('Failed to fetch todos');
         }
+
         const todos = await response.json();
         const container = document.querySelector('.lists');
         container.innerHTML = '';
+        console.log('all todos:',todos);
         todos.forEach(addTodoToDOM);
     } catch (error) {
         console.error('Error loading todos:', error);
     }
 }
+
+
+// document.querySelector('.login').addEventListener('click', () => {
+//     window.location.href = 'views/login.html';
+// })
+
+// document.querySelector('.signup').addEventListener('click', () => {
+//     window.location.href = 'views/Signup.html';
+// })
 
 function addTodoToDOM(todo) {
     const container = document.querySelector('.lists');
@@ -58,7 +78,7 @@ document.querySelector('form').addEventListener('submit', async (event) => {
     if (!todoValue) return;
 
     const newTodo = { todo: todoValue };
-
+    console.log(newTodo);
     try {
         const response = await fetch('http://localhost:3000/api/todos/create', {
             method: 'POST',
@@ -168,5 +188,3 @@ document.querySelector('.lists').addEventListener('click', async (event) => {
         }
     }
 });
-
-refreshWindow();

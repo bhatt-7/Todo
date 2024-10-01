@@ -4,11 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
+    <div class="navbar">
+        <a class="logout" onclick="window.location.href = '/api/users/logout'" style="text-decoration: none; color: white; background-color: salmon; padding: 15px; margin-top: 6px; float: right; border-radius: 10px;">Logout</a>
+    </div>
     <div class="container">
         <div class="left">
             <div class="add-box">
@@ -21,11 +24,12 @@
             </div>
         </div>
         <div class="right">
-            <div class="heading"><span class="s1"> TO DO LIST</span><br><span class="s2">WITH MongoDb and NodeJs</span></div>
+            <div class="heading"><span class="s1"> TO DO LIST</span><br><span class="s2">WITH MongoDb and NodeJs</span>
+            </div>
             <div class="techs">HTML,CSS & Javascript</div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script type="application/javascript" src="/src/script.js"></script>
 </body>
 
 </html>

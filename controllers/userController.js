@@ -18,12 +18,14 @@ const transporter = nodemailer.createTransport({
 const sendOtp = async (email, name) => {
     const otp = crypto.randomInt(100000, 999999).toString();
     const expiresAt = new Date(Date.now() + 1 * 60 * 1000);
+    //check if email already exists and isverified is false
 
     let user = await User.findOne({ email });
     if (!user) {
         user = new User({ email, name, otp: { code: otp, expiresAt } });
     } else {
         user.otp = { code: otp, expiresAt };
+
     }
 
     await user.save();
@@ -50,6 +52,7 @@ exports.sendOtp = async (req, res) => {
         if (userExist && userExist.isVerified) {
             return res.status(400).json({ message: 'User already verified.' });
         }
+
         const user = await sendOtp(email, name);
 
         res.status(200).json({ message: 'OTP sent successfully.', userId: user._id });
@@ -137,7 +140,6 @@ exports.registerUser = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         // Check if email and password are provided
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required.' });
@@ -148,7 +150,9 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
-
+        if (user && user.isBanned) {
+            return res.status(401).json({ message: 'आपको निलंबित कर दिया गया है' });
+        }
         // Check if the user has a password
         if (!user.password) {
             return res.status(500).json({ message: 'User password not found in the database.' });
@@ -168,15 +172,19 @@ exports.login = async (req, res) => {
 
         // Generate a JWT token
         const token = jwt.sign({ userId: user._id, email: user.email, role: user.role, todos: user.todos }, secretKey, { expiresIn: '1h' });
+        console.log('login wala token', token);
 
-        //add token to cookie using traditional method
-        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' });
+        //set token in cookie
 
-        // Send token and redirection URL
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false // or 'None' if needed
+        });
+
         res.status(200).json({
-            message: 'Login successful.',
+            message: 'आपका स्वागत है.',
             token,
-            redirectUrl: '/welcome'
+            role: user.role // Send role in the response
         });
     } catch (error) {
         console.error('Error during login:', error);
@@ -219,13 +227,24 @@ exports.changePassword = async (req, res) => {
     }
 };
 
-exports.getAllUsers = async (req, res) => {
+exports.logout = async (req, res) => {
     try {
-        const users = await User.find();
+        res.clearCookie('token');
+        res.redirect('/')
+    } catch (error) {
+        console.error('Error logging out:', error);
+        res.status(500).json({ message: 'Error logging out.' });
+    }
+};
+
+exports.getAllUsers = async (req, res) => {
+    //get all users who are not admin
+    try {
+        const users = await User.find({ role: { $ne: 'admin' } });
         res.status(200).json(users);
     } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ message: 'Error fetching users.' });
+        console.error('Error getting users:', error);
+        res.status(500).json({ message: 'Error getting users.' });
     }
 };
 
@@ -245,3 +264,22 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ message: 'Error deleting user.' });
     }
 }
+
+// Add this to your user controller to ban a user
+exports.banUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.isBanned = !user.isBanned;
+        await user.save();
+
+        res.status(200).json({ message: 'User banned successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to ban user' });
+    }
+};

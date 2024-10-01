@@ -8,17 +8,23 @@ const userRoutes = require('./routes/userRoutes');
 const { db } = require('./config/db');
 const app = express();
 const PORT = 3000;
-
+const path = require('path');
 // Connect to MongoDB
 db();
 
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname + '/public')));
 // Middleware
-app.use(cors(
-    {
-        origin: '*',
-    }
-));
+
+
+app.get('/', (req, res) => {
+    res.sendFile('/index.html');
+})
+
+app.use(cors({
+    origin: 'http://127.0.0.1:5500',
+    credentials: true,
+}));
 app.use(express.json());
 
 // Use the todo routes

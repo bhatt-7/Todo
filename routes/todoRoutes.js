@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get('/', authenticateToken, getTodos);
 router.get('/:id', authenticateToken, getTodoById);
-router.post('/', authenticateToken, createTodo);
+router.post('/create', authenticateToken, createTodo);
 router.put('/:id/edit', authenticateToken, editTodo);
 router.put('/:id/check', authenticateToken, checkTodo);
 router.delete('/:id', authenticateToken, deleteTodo);
