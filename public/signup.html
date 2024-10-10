@@ -115,7 +115,7 @@
                 const email = formData.get('email');
 
                 try {
-                    const response = await fetch('http://localhost:3000/api/users/send-otp', {
+                    const response = await fetch('/api/users/send-otp', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

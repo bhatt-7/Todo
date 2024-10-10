@@ -111,7 +111,7 @@
                 const email = sessionStorage.getItem('email'); // Get the email from sessionStorage
                 
                 try {
-                    const response = await fetch('http://localhost:3000/api/users/verify-otp', {
+                    const response = await fetch('/api/users/verify-otp', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

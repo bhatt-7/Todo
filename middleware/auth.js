@@ -8,7 +8,7 @@ const secretKey = 'hello123';
 exports.authenticateToken = async (req, res, next) => {
     try {
         const token = req.cookies.token || req.body.token || req.header("Authorization").replace("Bearer ", "");
-        console.log('middleware wala token',token);
+        // console.log('middleware wala token',token);
         if (!token) {
             return res.status(401).json({ success: false, message: 'Token is missing' });
         }

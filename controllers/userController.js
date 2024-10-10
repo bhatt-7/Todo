@@ -101,11 +101,15 @@ exports.verifyOtp = async (req, res) => {
 exports.registerUser = async (req, res) => {
     try {
         const { email, password, confirmPassword } = req.body;
-
+        const profilePicture = req.file;
+        console.log(req.file);
+        console.log(profilePicture);
         if (!email || !password || !confirmPassword) {
             return res.status(400).json({ message: 'Email, password, and confirm password are required.' });
         }
-
+        if (!profilePicture) {
+            return res.status(400).json({ message: 'Profile picture is required.' });
+        }
         if (password !== confirmPassword) {
             return res.status(400).json({ message: 'Passwords do not match.' });
         }
@@ -127,6 +131,12 @@ exports.registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         user.password = hashedPassword;
+        //trim public from path
+        console.log(typeof profilePicture.path);
+    
+        user.profilePicture = profilePicture.path.substring(6);
+
+        console.log('hatt',user.profilePicture);   
         await user.save();
 
         res.status(201).json({ message: 'User registered successfully.' });
@@ -151,7 +161,7 @@ exports.login = async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
         if (user && user.isBanned) {
-            return res.status(401).json({ message: 'आपको निलंबित कर दिया गया है' });
+            return res.status(401).json({ message: 'Admin banned you' });
         }
         // Check if the user has a password
         if (!user.password) {
@@ -182,7 +192,7 @@ exports.login = async (req, res) => {
         });
 
         res.status(200).json({
-            message: 'आपका स्वागत है.',
+            message: 'Welcome',
             token,
             role: user.role // Send role in the response
         });
@@ -270,7 +280,7 @@ exports.banUser = async (req, res) => {
     try {
         const userId = req.params.id;
         const user = await User.findById(userId);
-        
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -281,5 +291,25 @@ exports.banUser = async (req, res) => {
         res.status(200).json({ message: 'User banned successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Failed to ban user' });
+    }
+};
+
+exports.getCurrentUser = async (req, res) => {
+    try {
+        const userId = req.user.userId; // Assuming you set userId in the token when logged in
+        const user = await User.findById(userId).select('-password -otp'); // Exclude password and OTP from response
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).json({
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            profilePicture: user.profilePicture
+            // Add any other fields you want to expose
+        });
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        res.status(500).json({ message: 'Error fetching user details.' });
     }
 };

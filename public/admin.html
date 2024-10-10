@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,41 +11,53 @@
             background-color: #f4f4f9;
             padding: 20px;
         }
+
         h1 {
             text-align: center;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
         }
+
         th {
             background-color: #007bff;
             color: white;
         }
+
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
         .ban-btn {
-            background-color: #ff0000; /* Red for "Ban" */
+            background-color: #ff0000;
+            /* Red for "Ban" */
             color: white;
             border: none;
             padding: 5px 10px;
             cursor: pointer;
             border-radius: 5px;
         }
+
         .unban-btn {
-            background-color: #00b300; /* Green for "Unban" */
+            background-color: #00b300;
+            /* Green for "Unban" */
         }
     </style>
 </head>
+
 <body>
     <div class="navbar"></div>
-        <a class="logout" onclick="window.location.href = '/api/users/logout'" style="text-decoration: none; color: white; background-color: salmon; padding: 15px; margin-top: 6px; float: right; border-radius: 10px; cursor: pointer;">Logout</a>
+    <a class="logout" onclick="window.location.href = '/api/users/logout'"
+        style="text-decoration: none; color: white; background-color: salmon; padding: 15px; margin-top: 6px; float: right; border-radius: 10px; cursor: pointer;">Logout</a>
     </div>
     <h1>All Users with Role 'User'</h1>
     <table id="user-table">
@@ -65,7 +78,7 @@
         // Fetch users with role 'user' and populate the table
         async function fetchUsers() {
             try {
-                const response = await fetch('http://localhost:3000/api/users/getAllUsersWithRoleUser');
+                const response = await fetch('/api/users/getAllUsersWithRoleUser');
                 const users = await response.json();
 
                 if (response.ok) {
@@ -100,7 +113,7 @@
         // Function to toggle ban status
         async function toggleBanUser(userId, isBanned) {
             try {
-                const response = await fetch(`http://localhost:3000/api/users/banUser/${userId}`, {
+                const response = await fetch(`/api/users/banUser/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -111,8 +124,8 @@
                     const result = await response.json();
 
                     const banBtn = document.getElementById(`ban-btn-${userId}`);
-                    
-                    banBtn.classList.toggle('unban-btn'); 
+
+                    banBtn.classList.toggle('unban-btn');
 
                     console.log(`User ID: ${userId} isBanned: ${result.isBanned}`);
                 } else {
@@ -127,4 +140,5 @@
         document.addEventListener('DOMContentLoaded', fetchUsers);
     </script>
 </body>
+
 </html>

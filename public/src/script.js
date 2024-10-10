@@ -4,7 +4,7 @@ console.log("hello everyone");
 // Inside your refreshWindow function
 async function refreshWindow() {
     try {
-        const response = await fetch('http://localhost:3000/api/todos', {
+        const response = await fetch('/api/todos', {
             method: 'GET',
             credentials: 'include',  // Include cookies in the request
             headers: {
@@ -80,7 +80,7 @@ document.querySelector('form').addEventListener('submit', async (event) => {
     const newTodo = { todo: todoValue };
     console.log(newTodo);
     try {
-        const response = await fetch('http://localhost:3000/api/todos/create', {
+        const response = await fetch('/api/todos/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ document.querySelector('.lists').addEventListener('click', async (event) => {
 
     if (target.matches('.delete-button')) {
         try {
-            const response = await fetch(`http://localhost:3000/api/todos/${id}`, {
+            const response = await fetch(`/api/todos/${id}`, {
                 method: 'DELETE',
             });
 
@@ -123,7 +123,7 @@ document.querySelector('.lists').addEventListener('click', async (event) => {
         }
     } else if (target.matches('.check-button')) {
         try {
-            const todoResponse = await fetch(`http://localhost:3000/api/todos/${id}`);
+            const todoResponse = await fetch(`/api/todos/${id}`);
             console.log(todoResponse)
             if (!todoResponse.ok) {
                 throw new Error('Failed to fetch todo for checking');
@@ -131,7 +131,7 @@ document.querySelector('.lists').addEventListener('click', async (event) => {
             const todo = await todoResponse.json();
             const updatedTodo = { todo: todoResponse.todo, checked: !todo.checked };
 
-            const checkResponse = await fetch(`http://localhost:3000/api/todos/${id}/check`, {
+            const checkResponse = await fetch(`/api/todos/${id}/check`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ document.querySelector('.lists').addEventListener('click', async (event) => {
             const updatedTodo = { todo: inputElement.value.trim() };
             document.querySelector(`div[data-id="${id}"] .check-button`).disabled = false;
             try {
-                const editResponse = await fetch(`http://localhost:3000/api/todos/${id}/edit`, {
+                const editResponse = await fetch(`/api/todos/${id}/edit`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

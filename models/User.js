@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: false // Name will be optional in the first step
+        required: false
     },
     email: {
         type: String,
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: false // Password will be provided in the final registration step
+        required: false
     },
     role: {
         type: String,
@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema({
     isBanned: {
         type: Boolean,
         default: false
+    },
+    profilePicture: {
+        type: String
     },
 
     otp: {

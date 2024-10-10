@@ -86,7 +86,8 @@
                 font-size: 20px;
             }
 
-            button, input {
+            button,
+            input {
                 font-size: 14px;
             }
         }
@@ -100,49 +101,55 @@
             <form id="register-form">
                 <input type="password" id="password" placeholder="Enter Password" required>
                 <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                <input type="file" id="profilePicture" accept="image/*" required> 
+
                 <button type="submit">Register</button>
             </form>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const registerForm = document.getElementById('register-form');
-            registerForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
+    const registerForm = document.getElementById('register-form');
+    registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-                const email = sessionStorage.getItem('email'); 
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const email = sessionStorage.getItem('email');
+        const profilePicture = document.getElementById('profilePicture').files[0];
 
-                if (password !== confirmPassword) {
-                    alert('Passwords do not match!');
-                    return;
-                }
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
 
-                try {
-                    const response = await fetch('http://localhost:3000/api/users/register', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email, password, confirmPassword }),
-                    });
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('confirmPassword', confirmPassword);
+        formData.append('profilePicture', profilePicture);
 
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        alert('Registration successful. You can now log in.');
-                        window.location.href = '/api/users/login'; // Redirect to login page or dashboard
-                        sessionStorage.removeItem('email');
-                    } else {
-                        alert(`Error: ${result.message}`);
-                    }
-                } catch (error) {
-                    console.error('Error during registration:', error);
-                    alert('An error occurred. Please try again.');
-                }
+        try {
+            const response = await fetch('/api/users/register', {
+                method: 'POST',
+                body: formData, // Send FormData directly
             });
-        });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Registration successful. You can now log in.');
+                window.location.href = '/api/users/login'; // Redirect to login page or dashboard
+                sessionStorage.removeItem('email');
+            } else {
+                alert(`Error: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('Error during registration:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+});
     </script>
 </body>
 
