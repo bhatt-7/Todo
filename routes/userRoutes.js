@@ -62,9 +62,6 @@ router.get('/login', (req, res) => {
 });
 
 
-
-
-
 // router.put('/changePassword', authenticateToken, changePassword);
 
 // router.delete('/delete/:id', authenticateToken, isAdmin, deleteUser);

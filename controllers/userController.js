@@ -133,10 +133,10 @@ exports.registerUser = async (req, res) => {
         user.password = hashedPassword;
         //trim public from path
         console.log(typeof profilePicture.path);
-    
+
         user.profilePicture = profilePicture.path.substring(6);
 
-        console.log('hatt',user.profilePicture);   
+        console.log('profilePicture of User', user.profilePicture);
         await user.save();
 
         res.status(201).json({ message: 'User registered successfully.' });
